@@ -26,7 +26,7 @@ namespace Sleep0
 
         public static void LogWarning(this Object @object, object message)
         {
-            DoLog(Debug.Log, "<color=yellow>!</color>", @object, message);
+            DoLog(Debug.LogWarning, "<color=yellow>!</color>", @object, message);
         }
 
         public static void LogSuccess(this Object @object, object message)
