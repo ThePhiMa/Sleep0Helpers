@@ -4,7 +4,7 @@ namespace Sleep0.Math
 {
     public class PIDController
     {
-        [SerializeField] private PIDValuesSO _pidValues;
+        private PIDValuesSO _pidValues;
 
         private Vector3 _integral;
         private Vector3 _lastError;
@@ -13,9 +13,9 @@ namespace Sleep0.Math
         private Vector3 _ki;
         private Vector3 _kd;
 
-        public PIDController()
+        public PIDController(PIDValuesSO pidValues)
         {
-            SetPIDValues();
+            SetPIDValues(pidValues);
         }
 
         [ContextMenu("Calculate PID Values")]
@@ -27,8 +27,10 @@ namespace Sleep0.Math
             _pidValues.DGain = _pidValues.PGain * _pidValues.OscillationTime / 8f;
         }
 
-        private void SetPIDValues()
+        private void SetPIDValues(PIDValuesSO pidValues)
         {
+            _pidValues = pidValues;
+
             _kp = new Vector3(_pidValues.PGain, _pidValues.PGain, _pidValues.PGain);
             _ki = new Vector3(_pidValues.IGain, _pidValues.IGain, _pidValues.IGain);
             _kd = new Vector3(_pidValues.DGain, _pidValues.DGain, _pidValues.DGain);
