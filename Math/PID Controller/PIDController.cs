@@ -73,33 +73,42 @@ namespace Sleep0.Math
         public Vector3 UpdatePosition(Vector3 currentValue, Vector3 targetValue, float dt)
         {
             if (dt <= 0) throw new ArgumentOutOfRangeException(nameof(dt));
-
+        
             // Calculate error
             Vector3 error = targetValue - currentValue;
-
+        
             // Proportional term
             Vector3 P = Vector3.Scale(_kp, error);
-
+        
             _positionIntegral = Vector3.ClampMagnitude(_positionIntegral + error * dt, integralSaturation);
             // Integral term
             Vector3 I = Vector3.Scale(_ki, _positionIntegral);
-
+        
             Vector3 errorRateOfChange = (error - _positionLastError) / dt;
             _positionLastError = error;
-
+        
             Vector3 valueRateOfChange = (currentValue - valueLast) / dt;
             valueLast = currentValue;
             velocity = valueRateOfChange;
-
-            Vector3 deriveMeasure = derivativeMeasurement == DerivativeMeasurement.Velocity
-                ? -(currentValue - currentValue) / dt
-                : errorRateOfChange;
-
+        
+            Vector3 deriveMeasure = Vector3.zero;
+            if (derivativeInitialized)
+            {
+                if (derivativeMeasurement == DerivativeMeasurement.Velocity)
+                    deriveMeasure = -valueRateOfChange;
+                else
+                    deriveMeasure = errorRateOfChange;
+            }
+            else
+            {
+                derivativeInitialized = true;
+            }
+        
             // Derivative term
             Vector3 D = Vector3.Scale(_kd, deriveMeasure);
-
+        
             Vector3 result = P + I + D;
-
+        
             return Vector3.ClampMagnitude(result, outputMax);
         }
 
