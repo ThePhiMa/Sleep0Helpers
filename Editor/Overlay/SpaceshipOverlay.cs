@@ -43,7 +43,6 @@ namespace Sleep0.EditorExtensions
 
         public void Update()
         {
-            Debug.Log("SpaceshipOverlay Update");
             _currentState.text = $"Current State: {_spaceShip.GetCurrentState()}";
         }
     }
