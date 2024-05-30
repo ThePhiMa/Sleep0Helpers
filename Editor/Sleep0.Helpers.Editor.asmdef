@@ -1,0 +1,16 @@
+{
+    "name": "Sleep0.Helpers.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:59da05c81ac94a64faef7f9b2a38177c"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
