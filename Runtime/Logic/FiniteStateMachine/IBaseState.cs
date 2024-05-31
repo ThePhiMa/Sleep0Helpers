@@ -7,5 +7,7 @@ namespace Sleep0.Logic.FiniteStateMachine
         void Execute();
 
         void Exit();
+
+        string ToString();
     }
 }

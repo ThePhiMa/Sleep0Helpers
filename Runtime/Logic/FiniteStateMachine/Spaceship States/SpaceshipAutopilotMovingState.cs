@@ -210,5 +210,10 @@ namespace Sleep0.Logic.FiniteStateMachine
 
             _IsActive = false;
         }
+
+        public override string ToString()
+        {
+            return "Auto Moving: " + _currentState.ToString();
+        }
     }
 }

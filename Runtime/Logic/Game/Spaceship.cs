@@ -14,8 +14,10 @@ namespace Sleep0.Logic.Game
         [SerializeField] private float _upThrustMultiplier = 1.0f;
         [SerializeField] private float _torqueMultiplier = 1.0f;
         [Header("Thuster Flames")]
-        [SerializeField] private GameObject _flameLeft;
-        [SerializeField] private GameObject _flameRight;
+        [SerializeField] private GameObject _flameLeftFront;
+        [SerializeField] private GameObject _flameRightFront;
+        [SerializeField] private GameObject _flameLeftBack;
+        [SerializeField] private GameObject _flameRightBack;
         [SerializeField] private GameObject _flameUp;
         [SerializeField] private GameObject _flameDown;
         [SerializeField] private GameObject _flameFront;
@@ -79,8 +81,8 @@ namespace Sleep0.Logic.Game
 
         private void ResetFlames()
         {
-            SetScale(_flameLeft, 0.1f);
-            SetScale(_flameRight, 0.1f);
+            SetScale(_flameLeftFront, 0.1f);
+            SetScale(_flameRightFront, 0.1f);
             SetScale(_flameUp, 0.1f);
             SetScale(_flameDown, 0.1f);
             SetScale(_flameFront, 0.1f);
@@ -142,7 +144,8 @@ namespace Sleep0.Logic.Game
             Vector3 localAcceleration = acceleration; // transform.InverseTransformDirection(acceleration);
 
             // Set the scale of the flames based on the acceleration
-            SetFlameScale(_flameLeft, _flameRight, -localAcceleration.x);
+            SetFlameScale(_flameLeftFront, _flameRightFront, localAcceleration.x);
+            SetFlameScale(_flameLeftBack, _flameRightBack, -localAcceleration.x);
             SetFlameScale(_flameUp, _flameDown, localAcceleration.y);
             SetFlameScale(_flameFront, _flameBack, localAcceleration.z);
         }

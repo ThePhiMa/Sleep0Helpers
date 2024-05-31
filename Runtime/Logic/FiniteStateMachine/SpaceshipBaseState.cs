@@ -55,5 +55,10 @@ namespace Sleep0.Logic.FiniteStateMachine
         {
             throw new NotImplementedException();
         }
+
+        public override string ToString()
+        {
+            return base.ToString();
+        }
     }
 }
