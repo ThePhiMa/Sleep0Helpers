@@ -45,7 +45,7 @@ Refer to the individual script files for detailed usage instructions and example
 
 ## License
 
-This project is licensed under the Unlicense. You are free to use, modify, and distribute the code as you see fit. Happy coding!
+This project is licensed under the Unlicense. You are free to use, modify, and distribute the code as you see fit. Happy Coding! :)
 
 ## Contributions
 
