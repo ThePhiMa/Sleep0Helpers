@@ -4,6 +4,11 @@ using UnityEngine;
 
 namespace Sleep0.EditorExtensions
 {
+    /// <summary>
+    /// Base class for custom editors that display an overlay in the scene view when the GameObject is selected.
+    /// </summary>
+    /// <typeparam name="T">Type of the object for the custom editor</typeparam>
+    /// <typeparam name="U">Type of the custom overlay to display</typeparam>
     //[CustomEditor(typeof(ManagedBehaviour), true)]
     public abstract class CustomEditorOverlayBase<T, U> : Editor
         where T : MonoBehaviour
@@ -20,7 +25,6 @@ namespace Sleep0.EditorExtensions
             if (!_isInitiallised)
             {
                 _object = (T)target;
-                //_overlay = new U();
 
                 _overlay = GameObjectExtensions.CreateInstance<U>(_object);  // I love black voodoo magic like this
 

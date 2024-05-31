@@ -24,7 +24,6 @@ namespace Sleep0.EditorExtensions
             var root = new VisualElement() { name = "Spaceship Overlay" };
 
             root.style.width = new StyleLength(new Length(270, LengthUnit.Pixel));
-            //root.style.height = new StyleLength(new Length(100, LengthUnit.Pixel));
 
             var label = new Label("Spaceship Stats");
             label.style.flexGrow = 1;

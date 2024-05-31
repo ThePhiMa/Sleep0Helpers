@@ -123,28 +123,6 @@ namespace Sleep0.Math
         {
             _integralMax = MaxOutput / _ki;
 
-            // Calculate error
-            //float error = setpoint - actual;
-
-            // Proportional term
-            //float pOut = _kp * error;
-
-            //// Integral term
-            //_integral += error * deltaTime;
-            //float iOut = _ki * _integral;
-
-            //// Derivative term
-            //float derivative = (error - _lastError) / deltaTime;
-            //float dOut = _kd * derivative;
-
-            //// Remember last error
-            //_lastError = error;
-
-            //// Add the three terms to get the total output
-            //float output = pOut + iOut + dOut;
-
-            //return output;
-
             _integral += error * deltaTime;
             _integral = Mathf.Clamp(_integral, -_integralMax, _integralMax);
 
@@ -198,7 +176,6 @@ namespace Sleep0.Math
             output = Mathf.Clamp(output, -MaxOutput, MaxOutput);
 
             // Apply the steering force in the opposite direction of the sideways velocity
-            //Vector3 steeringForce = -output * sidewaysVelocity.normalized;
             Vector3 steeringForce = output * sidewaysVelocity.normalized;
 
             return steeringForce;
@@ -279,48 +256,6 @@ namespace Sleep0.Math
                 _pIDControllers[i].Reset();
             }
         }
-
-        //public Vector3 Update2(Vector3 currentVelocity, Vector3 targetVelocity, float dt)
-        //{
-        //    if (dt <= 0) throw new ArgumentOutOfRangeException(nameof(dt));
-
-        //    // Calculate error
-        //    Vector3 error = targetValue - currentValue;
-
-        //    // Proportional term
-        //    Vector3 P = Vector3.Scale(_kp, error);
-
-        //    _positionIntegral = Vector3.ClampMagnitude(_positionIntegral + error * dt, integralSaturation);
-        //    // Integral term
-        //    Vector3 I = Vector3.Scale(_ki, _positionIntegral);
-
-        //    Vector3 errorRateOfChange = (error - _positionLastError) / dt;
-        //    _positionLastError = error;
-
-        //    Vector3 valueRateOfChange = (currentValue - valueLast) / dt;
-        //    valueLast = currentValue;
-        //    velocity = valueRateOfChange;
-
-        //    Vector3 deriveMeasure = Vector3.zero;
-        //    if (derivativeInitialized)
-        //    {
-        //        if (derivativeMeasurement == DerivativeMeasurement.Velocity)
-        //            deriveMeasure = -valueRateOfChange;
-        //        else
-        //            deriveMeasure = errorRateOfChange;
-        //    }
-        //    else
-        //    {
-        //        derivativeInitialized = true;
-        //    }
-
-        //    // Derivative term
-        //    Vector3 D = Vector3.Scale(_kd, deriveMeasure);
-
-        //    Vector3 result = P + I + D;
-
-        //    return Vector3.ClampMagnitude(result, outputMax);
-        //}
     }
 
     public class PIDControllerQuaternion : IPIDController

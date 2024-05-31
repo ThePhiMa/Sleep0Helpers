@@ -50,7 +50,7 @@ namespace Sleep0.Logic
             _pidValues.DGain = 0;
 
             // Step 2: Increase P gain until the output oscillates
-            //_pidValues.PGain += 0.01f;
+            _pidValues.PGain += 0.01f;
 
             // Step 3: Measure the oscillation period
             float error = _pidController.GetError();
