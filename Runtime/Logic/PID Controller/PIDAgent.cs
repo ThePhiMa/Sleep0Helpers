@@ -118,22 +118,34 @@ namespace Sleep0.Logic
 
             // This uses the main thruster to move the spacecraft forward, and only forward.
             if (_thrust.z < 0)
-                return;
-
-            _rigidbody.AddForce(transform.forward * _thrust.magnitude * thrustMofifier, forceMode);
+            {
+                //    return;
+                _rigidbody.AddForce(-transform.forward * _thrust.magnitude * thrustMofifier, forceMode);
+            }
+            else
+            {
+                _rigidbody.AddForce(transform.forward * _thrust.magnitude * thrustMofifier, forceMode);
+            }
         }
 
         public void UpdateSideThrust(float sidewaysVelocity, float desiredSidewaysVelocity, float thrustMofifier = 1.0f, ForceMode forceMode = ForceMode.Force)
         {
             float sideThrust = _sideThrustController.Update(sidewaysVelocity, desiredSidewaysVelocity, Time.fixedDeltaTime, DerivativeMeasurement.Velocity);
-            _sideThrust = new Vector3(sideThrust, 0f, 0f);
+            //_sideThrust = new Vector3(sideThrust, 0f, 0f);
             _rigidbody.AddForce(transform.right * sideThrust * thrustMofifier, forceMode);
         }
 
         public void UpdateUpThrust(Vector3 upVelocity, Vector3 desiredUpVelocity, float thrustModifier = 1.0f, ForceMode forceMode = ForceMode.Force)
         {
             _upThrust = _upThrustController.Update(upVelocity, desiredUpVelocity, Time.fixedDeltaTime);
-            _rigidbody.AddForce(_rigidbody.transform.up * _upThrust.magnitude, forceMode);
+            _rigidbody.AddForce(transform.up * _upThrust.magnitude, forceMode);
+        }
+
+        public void UpdateUpThrust(float upVelocity, float desiredUpVelocity, float thrustMofifier = 1.0f, ForceMode forceMode = ForceMode.Force)
+        {
+            float upThrust = _upThrustController.Update(upVelocity, desiredUpVelocity, Time.fixedDeltaTime, DerivativeMeasurement.Velocity);
+            //_upThrust = new Vector3(0f, upThrust, 0f);
+            _rigidbody.AddForce(transform.up * upThrust * thrustMofifier, forceMode);
         }
 
         public void ChangePValue(float valueChange, PIDType pidType)
@@ -165,10 +177,10 @@ namespace Sleep0.Logic
 
         public void Reset()
         {
-            _mainThrustController.Reset();
-            _sideThrustController.Reset();
-            _upThrustController.Reset();
-            _torqueController.Reset();
+            _mainThrustController?.Reset();
+            _sideThrustController?.Reset();
+            _upThrustController?.Reset();
+            _torqueController?.Reset();
         }
     }
 }

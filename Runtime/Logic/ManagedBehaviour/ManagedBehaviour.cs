@@ -4,10 +4,11 @@ namespace Sleep0.Logic
 {
     public abstract class ManagedBehaviour : MonoBehaviour, IManagedObject
     {
-        private int _updateOrder = 0;
-        public int UpdateOrder
+        protected int _UpdateOrder = 0;
+
+        public virtual int UpdateOrder
         {
-            get { return _updateOrder; }
+            get { return _UpdateOrder; }
         }
 
         protected virtual void OnEnable()

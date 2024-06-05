@@ -125,6 +125,9 @@ namespace Sleep0.EditorExtensions
 
         private void UpdateValues(Vector3 velocity, Vector3 thrust, Vector3 sideThrust, Vector3 torque)
         {
+            if (_currentVelocityLabel == null || _thrustPIDLabel == null || _sideThrustPIDLabel == null || _torquePIDLabel == null)
+                return;
+
             _currentVelocityLabel.text = $"Current Velocity: [X {velocity.x.ToString("F2")}; Y: {velocity.y.ToString("F2")}; Z: {velocity.z.ToString("F2")}]";
             _thrustPIDLabel.text = FormatPIDValues("Thrust", thrust);
             _sideThrustPIDLabel.text = FormatPIDValues("Side Thrust", sideThrust);

@@ -47,6 +47,9 @@ namespace Sleep0.EditorExtensions
 
         public override void OnInspectorGUI()
         {
+            if (_overlay is null)
+                return;
+
             base.DrawDefaultInspector();
 
             if (Selection.activeGameObject == ((T)target).gameObject)
