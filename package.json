@@ -1,7 +1,7 @@
 {
   "name": "com.sleep0.helpers",
   "displayName": "Sleep0 Helpers",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Collection of helper classes and functions. Repo: https://github.com/ThePhiMa/Sleep0Helpers.git",
   "unity": "2022.3",
   "documentationUrl": "https://github.com/ThePhiMa/Sleep0Helpers",
@@ -21,5 +21,8 @@
     "email": "mischa+sleep0helpers@wasmuth.ws",
     "url": "www.got0sleep.xyz"
   },
-  "type": "tool"
+  "type": "tool",
+  "dependencies": {
+    "com.unity.inputsystem": "1.7.0"
+  }
 }
