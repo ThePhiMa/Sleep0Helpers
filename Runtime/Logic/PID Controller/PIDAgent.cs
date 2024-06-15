@@ -74,7 +74,7 @@ namespace Sleep0.Logic
         {
             if (Input.GetKeyDown(KeyCode.T))
             {
-                IsAutotuningActive = true;
+                //IsAutotuningActive = true;
             }
 
             if (IsAutotuningActive)
