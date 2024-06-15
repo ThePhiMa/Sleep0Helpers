@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 
 namespace Sleep0.Logic
@@ -14,6 +16,8 @@ namespace Sleep0.Logic
         [Header("Movement")]
         [SerializeField] private float _walkSpeed = 5.0f;
         [SerializeField] private float _sprintSpeed = 10.0f;
+        [Header("UI")]
+        [SerializeField] private LayerMask _interactibeUILayer;
 
         private PlayerInputActions _inputActions;
 
@@ -21,8 +25,6 @@ namespace Sleep0.Logic
         private float _verticalRotation = 0;
         private float _horizontalRotation = 0;
         private bool _isSprinting = false;
-
-        private Camera _playerCamera;
 
         private void Awake()
         {
@@ -35,7 +37,6 @@ namespace Sleep0.Logic
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
 
-            _playerCamera = GetComponentInChildren<Camera>();
         }
 
         protected void OnEnable()
@@ -50,6 +51,17 @@ namespace Sleep0.Logic
 
         void Update()
         {
+            UpdateMouseMovement();
+            UpdateKeysMovement();
+        }
+
+        private void FixedUpdate()
+        {
+            HandleRaycast();
+        }
+
+        private void UpdateMouseMovement()
+        {
             // Rotation
             Vector2 look = _inputActions.Player.Look.ReadValue<Vector2>() * (_mouseSensitivity * Time.deltaTime);
 
@@ -61,14 +73,47 @@ namespace Sleep0.Logic
                 _horizontalRotation = Mathf.Clamp(_horizontalRotation, -_horizontalRange, _horizontalRange);
 
             transform.localRotation = Quaternion.Euler(_verticalRotation, _horizontalRotation, 0);
+        }
 
+        private void UpdateKeysMovement()
+        {
             // Movement
+            _isSprinting = _inputActions.Player.SprintToggle.ReadValue<float>() > 0.5f;
+
             Vector2 movement = _inputActions.Player.Move.ReadValue<Vector2>() * (_movementSpeed * Time.deltaTime);
 
             Vector3 speed = new Vector3(movement.x, 0, movement.y);
             speed = transform.rotation * speed;
 
             transform.position += speed * Time.deltaTime;
+        }
+
+        private void HandleRaycast()
+        {
+            if (_inputActions.UI.Click.WasPerformedThisFrame())
+            {
+                PointerEventData pointerData = new PointerEventData(EventSystem.current)
+                {
+                    position = new Vector2(Screen.width / 2, Screen.height / 2)
+                };
+
+                // Perform raycast
+                List<RaycastResult> results = new List<RaycastResult>();
+                EventSystem.current.RaycastAll(pointerData, results);
+
+                // Process results
+                foreach (RaycastResult result in results)
+                {
+                    // Check if the result is a UI element on the right layer and try to click it
+                    if (_interactibeUILayer.Contains(result.gameObject.layer))
+                    {
+                        // Simulate a click on the detected UI element
+                        var clickHandler = result.gameObject.GetComponent<IPointerClickHandler>();
+                        clickHandler?.OnPointerClick(pointerData);
+                        break;
+                    }
+                }
+            }
         }
     }
 }
