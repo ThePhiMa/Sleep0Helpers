@@ -1,19 +1,18 @@
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
-
 
 namespace Sleep0.Logic
 {
-    public class FPSCameraController : MonoBehaviour
+    public class FPSController : MonoBehaviour
     {
         [Header("Mouse")]
+        [SerializeField] private bool _isMouseMovementEnabled = true;
         [SerializeField] private float _mouseSensitivity = 2.0f;
         [SerializeField] private bool _clampVerticalRotation = true;
         [SerializeField] private float _verticalRange = 60.0f;
         [SerializeField] private bool _clampHorizontalRotation = false;
         [SerializeField] private float _horizontalRange = 180.0f;
         [Header("Movement")]
+        [SerializeField] private bool _isMovementEnabled = true;
         [SerializeField] private float _walkSpeed = 5.0f;
         [SerializeField] private float _sprintSpeed = 10.0f;
         [Header("UI")]
@@ -26,38 +25,44 @@ namespace Sleep0.Logic
         private float _horizontalRotation = 0;
         private bool _isSprinting = false;
 
-        private void Awake()
+        protected virtual void Awake()
         {
-            // Activate inputs
             _inputActions = new PlayerInputActions();
         }
 
-        private void Start()
+        protected virtual void Start()
         {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
 
+            _verticalRotation = transform.localEulerAngles.x;
+            _horizontalRotation = transform.localEulerAngles.y;
         }
 
-        protected void OnEnable()
+        protected virtual void OnEnable()
         {
             _inputActions?.Player.Enable();
         }
 
-        protected void OnDisable()
+        protected virtual void OnDisable()
         {
             _inputActions.Player.Disable();
         }
 
-        void Update()
+        protected virtual void Update()
         {
-            UpdateMouseMovement();
-            UpdateKeysMovement();
-        }
+            if (_isMouseMovementEnabled)
+            {
+                LockCursor();
+                UpdateMouseMovement();
+            }
+            else
+            {
+                UnlockCursor();
+            }
 
-        private void FixedUpdate()
-        {
-            HandleRaycast();
+            if (_isMovementEnabled)
+                UpdateKeysMovement();
         }
 
         private void UpdateMouseMovement()
@@ -88,32 +93,16 @@ namespace Sleep0.Logic
             transform.position += speed * Time.deltaTime;
         }
 
-        private void HandleRaycast()
+        private void LockCursor()
         {
-            if (_inputActions.UI.Click.WasPerformedThisFrame())
-            {
-                PointerEventData pointerData = new PointerEventData(EventSystem.current)
-                {
-                    position = new Vector2(Screen.width / 2, Screen.height / 2)
-                };
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
 
-                // Perform raycast
-                List<RaycastResult> results = new List<RaycastResult>();
-                EventSystem.current.RaycastAll(pointerData, results);
-
-                // Process results
-                foreach (RaycastResult result in results)
-                {
-                    // Check if the result is a UI element on the right layer and try to click it
-                    if (_interactibeUILayer.Contains(result.gameObject.layer))
-                    {
-                        // Simulate a click on the detected UI element
-                        var clickHandler = result.gameObject.GetComponent<IPointerClickHandler>();
-                        clickHandler?.OnPointerClick(pointerData);
-                        break;
-                    }
-                }
-            }
+        private void UnlockCursor()
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
         }
     }
 }

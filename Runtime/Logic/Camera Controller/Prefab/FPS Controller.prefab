@@ -147,11 +147,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0cfd35c40e879e45a1b01296dc5c5d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isMouseMovementEnabled: 1
   _mouseSensitivity: 10
   _clampVerticalRotation: 1
   _verticalRange: 60
   _clampHorizontalRotation: 0
   _horizontalRange: 180
+  _isMovementEnabled: 1
   _walkSpeed: 500
   _sprintSpeed: 1000
   _interactibeUILayer:
