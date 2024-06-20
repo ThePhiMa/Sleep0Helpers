@@ -61,6 +61,7 @@ namespace Sleep0.Logic
         private void Start()
         {
             _rigidbody = GetComponent<Rigidbody>();
+            Debug.Assert(_rigidbody != null, "Rigidbody is null");
 
             _mainThrustController = new PIDControllerVector3(_pidMainThrustValues);
             _sideThrustController = new PIDController(_pidSideThrustValues);
@@ -79,19 +80,8 @@ namespace Sleep0.Logic
 
             if (IsAutotuningActive)
             {
-                Debug.Log("Autotuning...");
                 IsAutotuningActive = !_autotuner.TuningUpdate();
             }
-
-            var mult = 10f;
-            //using (Draw.InLocalSpace(transform))
-            //{
-            //    Draw.Arrow(Vector3.zero, Vector3.forward * _thrust.magnitude, Color.blue);
-            //    Draw.Arrow(Vector3.zero, Vector3.right * _sideThrust.magnitude * mult, Color.red);
-            //    Draw.Arrow(Vector3.zero, Vector3.up * _upThrust.magnitude * mult, Color.green);
-
-            //    //Draw.Arrow(Vector3.zero, _torque * mult, Color.yellow);
-            //}
 
             if (UpdatePIDValuesEachFrame)
             {
@@ -119,7 +109,6 @@ namespace Sleep0.Logic
             // This uses the main thruster to move the spacecraft forward, and only forward.
             if (_thrust.z < 0)
             {
-                //    return;
                 _rigidbody.AddForce(-transform.forward * _thrust.magnitude * thrustMofifier, forceMode);
             }
             else

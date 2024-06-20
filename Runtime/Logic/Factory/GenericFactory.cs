@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Sleep0.Logic
@@ -104,13 +103,12 @@ namespace Sleep0.Logic
         {
             // ToDo: Should I just add the component if there is non? Why not? Why should I? Questions over questions.
             T component = parent.GetComponent<T>();
-            if (component == null)
-                DebugHelper.LogError(parent, $"Gameobject {parent.name} has no component of type {typeof(T).Name}");
+            Debug.Assert(component != null, $"Gameobject {parent.name} has no component of type {typeof(T).Name}");
             return component;
         }
     }
 
-    public abstract class GameObjectFactory<T,U> : GameObjectFactory<T>
+    public abstract class GameObjectFactory<T, U> : GameObjectFactory<T>
         where T : ParameteredManagedBehaviour<U>
     {
         public GameObjectFactory(GameObject prefab) : base(prefab)
@@ -121,12 +119,13 @@ namespace Sleep0.Logic
         {
             GameObject result = GameObject.Instantiate(_prefab);
             T component = GetComponenOfType(result);
+            Debug.Assert(component != null, $"Gameobject {result.name} has no component of type {typeof(T).Name}");
             component?.OnCreate(parameter);
             return (result, component);
-        } 
+        }
     }
 
-    public abstract class GameObjectFactory<T,U,V> : GameObjectFactory<T>
+    public abstract class GameObjectFactory<T, U, V> : GameObjectFactory<T>
         where T : ParameteredManagedBehaviour<U, V>
     {
         public GameObjectFactory(GameObject prefab) : base(prefab)
@@ -137,6 +136,7 @@ namespace Sleep0.Logic
         {
             GameObject result = GameObject.Instantiate(_prefab);
             T component = GetComponenOfType(result);
+            Debug.Assert(component != null, $"Gameobject {result.name} has no component of type {typeof(T).Name}");
             component?.OnCreate(parameter1, parameter2);
             return (result, component);
         }
@@ -153,6 +153,7 @@ namespace Sleep0.Logic
         {
             GameObject result = GameObject.Instantiate(_prefab);
             T component = GetComponenOfType(result);
+            Debug.Assert(component != null, $"Gameobject {result.name} has no component of type {typeof(T).Name}");
             component?.OnCreate(parameter1, parameter2, parameter3);
             return (result, component);
         }
@@ -169,6 +170,7 @@ namespace Sleep0.Logic
         {
             GameObject result = GameObject.Instantiate(_prefab);
             T component = GetComponenOfType(result);
+            Debug.Assert(component != null, $"Gameobject {result.name} has no component of type {typeof(T).Name}");
             component?.OnCreate(parameter1, parameter2, parameter3, parameter4);
             return (result, component);
         }
