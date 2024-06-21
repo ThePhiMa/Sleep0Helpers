@@ -35,6 +35,38 @@ namespace Sleep0.EditorExtensions
             {
                 CompilationPipeline.RequestScriptCompilation();
             }
+
+            if (GUILayout.Button(new GUIContent("B", "Build the project"), ToolbarStyles.commandButtonStyle))
+            {
+                BuildPipeline.BuildPlayer(EditorBuildSettings.scenes, "Builds", BuildTarget.StandaloneWindows64, BuildOptions.None);
+            }
+
+            if (GUILayout.Button(new GUIContent("P", "Open the project settings"), ToolbarStyles.commandButtonStyle))
+            {
+                EditorApplication.ExecuteMenuItem("Edit/Project Settings...");
+            }
+
+            if (Selection.activeTransform == null) return;
+
+            GUILayout.Space(10);
+            GUILayout.Label("Transform", GUILayout.MinWidth(60));
+
+            Transform transform = Selection.activeTransform;
+
+            if (GUILayout.Button(new GUIContent("RP", "Reset Position to Vector.zero"), ToolbarStyles.commandButtonStyle))
+            {
+                transform.position = Vector3.zero;
+            }
+
+            if (GUILayout.Button(new GUIContent("RR", "Reset Rotation to Quaternion.identity"), ToolbarStyles.commandButtonStyle))
+            {
+                transform.rotation = Quaternion.identity;
+            }
+
+            if (GUILayout.Button(new GUIContent("RS", "Reset Scale to Vector.one"), ToolbarStyles.commandButtonStyle))
+            {
+                transform.localScale = Vector3.one;
+            }
         }
     }
 }
