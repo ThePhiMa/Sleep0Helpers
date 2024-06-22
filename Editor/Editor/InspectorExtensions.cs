@@ -6,7 +6,6 @@ public class InspectorExtensions : Editor
 {
     public override void OnInspectorGUI()
     {
-        EditorGUILayout.Space();
         EditorGUILayout.LabelField("Transform Settings", EditorStyles.boldLabel);
 
         EditorGUILayout.BeginHorizontal();
