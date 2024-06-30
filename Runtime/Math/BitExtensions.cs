@@ -4,7 +4,7 @@ using System;
 
 namespace Sleep0.Math
 {
-    static class BitExtensions
+    public static class BitExtensions
     {
         public static int SetBitTo1(this int value, int position)
         {
