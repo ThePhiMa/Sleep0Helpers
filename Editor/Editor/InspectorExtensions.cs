@@ -1,14 +1,32 @@
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(GameObject))]
-public class InspectorExtensions : Editor
+public class InspectorExtensions : EditorWindow
 {
-    public override void OnInspectorGUI()
+    [MenuItem("Tools/GameObject Tools")]
+    public static void ShowWindow()
+    {
+        var window = GetWindow<InspectorExtensions>("GameObject Tools");
+        window.minSize = new Vector2(200, 60);
+    }
+
+    private void OnEnable()
+    {
+        Selection.selectionChanged += Repaint;
+    }
+
+    private void OnDisable()
+    {
+        Selection.selectionChanged -= Repaint;
+    }
+
+    public void OnGUI()
     {
         EditorGUILayout.LabelField("Transform Settings", EditorStyles.boldLabel);
 
         EditorGUILayout.BeginHorizontal();
+
+        GUI.enabled = Selection.activeGameObject != null;
 
         if (GUILayout.Button("Reset Transform"))
         {
