@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using UnityEngine;
 
 public class InjectAttribute : Attribute
 {
@@ -37,6 +38,7 @@ public class DependencyContainer
 
     public void InjectDependencies(object target)
     {
+        //Debug.Log("Injecting depedencies.");
         var type = target.GetType();
         var fields = type.GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
 
@@ -46,6 +48,7 @@ public class DependencyContainer
             if (injectAttribute != null)
             {
                 var fieldType = field.FieldType;
+                //Debug.Log($"Injecting dependency for {fieldType}");
                 object dependency = ResolveDependency(fieldType, injectAttribute.Scope);
                 field.SetValue(target, dependency);
             }
@@ -92,6 +95,7 @@ public class DependencyContainer
         {
             return factory();
         }
+        Debug.LogError($"No factory registered for type {type}");
         throw new Exception($"No factory registered for type {type}");
     }
 
