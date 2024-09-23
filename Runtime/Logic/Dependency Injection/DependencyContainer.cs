@@ -17,7 +17,9 @@ public enum LifetimeScope
 {
     Singleton,
     Transient,
-    PerScene
+    PerScene,
+    PerObject,
+    PerGameSession
 }
 
 public class DependencyContainer
@@ -28,6 +30,7 @@ public class DependencyContainer
     private readonly Dictionary<Type, object> _singletons = new Dictionary<Type, object>();
     private readonly Dictionary<Type, Func<object>> _factories = new Dictionary<Type, Func<object>>();
     private readonly Dictionary<string, Dictionary<Type, object>> _sceneScoped = new Dictionary<string, Dictionary<Type, object>>();
+    private readonly Dictionary<Type, object> _gameSessionScoped = new Dictionary<Type, object>();
 
     private DependencyContainer() { }
 
