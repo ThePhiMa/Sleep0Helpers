@@ -20,7 +20,7 @@ namespace Sleep0.Logic
 
     //public class GenericFactory<T, U, V> : GenericFactory<T>
     //    where T : MonoBehaviour
-    //    where U : ParameteredMonobehaviour<V> 
+    //    where U : ParameteredMonobehaviour<V>
     //{
     //    public GenericFactory(T prefab) : base(prefab)
     //    {
@@ -101,7 +101,7 @@ namespace Sleep0.Logic
 
         protected virtual T GetComponenOfType(GameObject parent)
         {
-            // ToDo: Should I just add the component if there is non? Why not? Why should I? Questions over questions.
+            // ToDo: Should I just add the component if there is none? Why not? Why should I? Questions over questions.
             T component = parent.GetComponent<T>();
             Debug.Assert(component != null, $"Gameobject {parent.name} has no component of type {typeof(T).Name}");
             return component;
