@@ -41,8 +41,8 @@ public class DependencyContainer
 
     public void InjectDependencies(object target)
     {
-        //Debug.Log("Injecting depedencies.");
         var type = target.GetType();
+        Debug.Log($"Injecting depedencies... looking for type {type}");
         var fields = type.GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
 
         foreach (var field in fields)
@@ -51,7 +51,7 @@ public class DependencyContainer
             if (injectAttribute != null)
             {
                 var fieldType = field.FieldType;
-                //Debug.Log($"Injecting dependency for {fieldType}");
+                Debug.Log($"Injecting dependency for {fieldType}");
                 object dependency = ResolveDependency(fieldType, injectAttribute.Scope);
                 field.SetValue(target, dependency);
             }

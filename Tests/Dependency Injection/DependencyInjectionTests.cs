@@ -34,11 +34,37 @@ public class DependencyInjectionTests
         Assert.IsNotNull(instance1);
         Assert.IsNotNull(instance2);
         Assert.AreEqual(instance1, instance2);
+
+        instance1.DoSomething();
+        instance2.DoSomething();
+    }
+
+    [Inject]
+    public TransientService TransientService;
+
+    [Test]
+    public void TransientScope_ReturnsExistingInstance()
+    {
+        Assert.IsNotNull(container);
+
+        var transientService2 = new TransientService();
+
+        container.Register<TransientService>(() => transientService2);
+
+        container.InjectDependencies(this);
+
+        var instance = this.TransientService;
+
+        Assert.IsNotNull(instance);
+
+        instance.DoSomething();
     }
 
     [Test]
     public void TransientScope_ReturnsNewInstance()
     {
+        Assert.IsNotNull(container);
+
         container.Register<ITransientService>(() => new TransientService());
 
         var testObject = new GameObject().AddComponent<TransientServiceBehaviour>();
@@ -50,11 +76,16 @@ public class DependencyInjectionTests
         Assert.IsNotNull(instance1);
         Assert.IsNotNull(instance2);
         Assert.AreNotEqual(instance1, instance2);
+
+        instance1.DoSomething();
+        instance2.DoSomething();
     }
 
     [UnityTest]
     public IEnumerator PerSceneScope_ReturnsSameInstanceWithinScene()
     {
+        Assert.IsNotNull(container);
+
         container.Register<ISceneService>(() => new SceneService());
 
         // Load a test scene
@@ -75,6 +106,9 @@ public class DependencyInjectionTests
         Assert.IsNotNull(instance2);
         Assert.AreEqual(instance1, instance2);
 
+        instance1.DoSomething();
+        instance2.DoSomething();
+
         // Clean up
         yield return SceneManager.UnloadSceneAsync(testScene);
     }
@@ -82,6 +116,8 @@ public class DependencyInjectionTests
     [UnityTest]
     public IEnumerator PerSceneScope_ReturnsDifferentInstancesBetweenScenes()
     {
+        Assert.IsNotNull(container);
+
         container.Register<ISceneService>(() => new SceneService());
 
         // Load first test scene
@@ -105,6 +141,9 @@ public class DependencyInjectionTests
         Assert.IsNotNull(instance1);
         Assert.IsNotNull(instance2);
         Assert.AreNotEqual(instance1, instance2);
+
+        instance1.DoSomething();
+        instance2.DoSomething();
 
         // Clean up
         yield return SceneManager.UnloadSceneAsync(testScene1);
