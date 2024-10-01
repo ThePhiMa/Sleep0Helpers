@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class InspectorExtensions : EditorWindow
 {
-    [MenuItem("Tools/GameObject Tools")]
+    [MenuItem("Tools/Sleep0/GameObject Tools")]
     public static void ShowWindow()
     {
         var window = GetWindow<InspectorExtensions>("GameObject Tools");

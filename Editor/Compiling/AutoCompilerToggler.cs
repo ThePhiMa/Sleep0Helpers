@@ -5,7 +5,7 @@ namespace Sleep0.EditorExtensions
 {
     public class AutoCompilerToggler
     {
-        [MenuItem("Tools/Toggle AutoCompiler #&a")]
+        [MenuItem("Tools/Sleep0/Toggle AutoCompiler #&a")]
         public static void ToggleAutcompiler()
         {
             int status = EditorPrefs.GetInt("kAutoRefresh");

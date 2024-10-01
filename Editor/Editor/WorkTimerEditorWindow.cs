@@ -16,7 +16,7 @@ public class WorkTimer : EditorWindow
 
     private bool wasEditorFocused = true;
 
-    [MenuItem("Tools/Work Timer")]
+    [MenuItem("Tools/Sleep0/Work Timer")]
     public static void ShowWindow()
     {
         GetWindow<WorkTimer>("Work Timer");
