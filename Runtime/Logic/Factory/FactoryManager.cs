@@ -3,8 +3,11 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FactoryManager : SingletonMonoBehaviour<FactoryManager>
+public class FactoryManager
 {
+    public static FactoryManager Instance => _instance ??= new FactoryManager();
+    private static FactoryManager _instance;
+
     private Dictionary<Type, object> factories = new Dictionary<Type, object>();
 
     public void RegisterFactory<T>(GameObjectFactory<T> factory) where T : Component
