@@ -1,5 +1,4 @@
 using Sleep0.Logic;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,53 +7,44 @@ public class FactoryManager
     public static FactoryManager Instance => _instance ??= new FactoryManager();
     private static FactoryManager _instance;
 
-    private Dictionary<Type, object> factories = new Dictionary<Type, object>();
+    private Dictionary<string, GameObjectFactory> factories = new Dictionary<string, GameObjectFactory>();
 
-    public void RegisterFactory<T>(GameObjectFactory<T> factory) where T : Component
+    public void RegisterFactory(string key, GameObject prefab)
     {
-        Type componentType = typeof(T);
-        if (!factories.ContainsKey(componentType))
+        if (!factories.ContainsKey(key))
         {
-            factories[componentType] = factory;
+            factories[key] = new GameObjectFactory(prefab);
         }
         else
         {
-            Debug.LogWarning($"Factory for type {componentType.Name} already registered.");
+            Debug.LogWarning($"Factory for type {key} already registered.");
         }
     }
 
-    public GameObjectFactory<T> GetFactory<T>() where T : Component
+    public GameObjectFactory GetFactory(string key)
     {
-        Type componentType = typeof(T);
-        if (factories.TryGetValue(componentType, out object factory))
+        if (factories.TryGetValue(key, out GameObjectFactory factory))
         {
-            return (GameObjectFactory<T>)factory;
+            return factory;
         }
-
-        Debug.LogError($"No factory registered for type {componentType.Name}.");
-        return null;
+        throw new KeyNotFoundException($"No factory found for key '{key}'");
     }
 
-    public GameObject CreateObject<T>() where T : Component
+    public GameObject CreateObject(string key, Transform parent)
     {
-        GameObjectFactory<T> factory = GetFactory<T>();
-        if (factory != null)
+        if (factories.TryGetValue(key, out GameObjectFactory factory))
         {
-            return factory.GetObject();
+            return factory.Create(parent);
         }
-        return null;
+        throw new KeyNotFoundException($"No factory found for key '{key}'");
     }
 
-    public void UnregisterFactory<T>() where T : Component
+    public void UnregisterFactory(string key)
     {
-        Type componentType = typeof(T);
-        if (factories.ContainsKey(componentType))
+        if (factories.TryGetValue(key, out GameObjectFactory factory))
         {
-            factories.Remove(componentType);
+            factories.Remove(key);
         }
-        else
-        {
-            Debug.LogWarning($"No factory registered for type {componentType.Name} to unregister.");
-        }
+        throw new KeyNotFoundException($"No factory found for key '{key}'");
     }
 }
