@@ -1,50 +1,52 @@
-using Sleep0.Logic;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FactoryManager
+namespace Sleep0.Logic
 {
-    public static FactoryManager Instance => _instance ??= new FactoryManager();
-    private static FactoryManager _instance;
-
-    private Dictionary<string, GameObjectFactory> factories = new Dictionary<string, GameObjectFactory>();
-
-    public void RegisterFactory(string key, GameObject prefab)
+    public class FactoryManager
     {
-        if (!factories.ContainsKey(key))
-        {
-            factories[key] = new GameObjectFactory(prefab);
-        }
-        else
-        {
-            Debug.LogWarning($"Factory for type {key} already registered.");
-        }
-    }
+        public static FactoryManager Instance => _instance ??= new FactoryManager();
+        private static FactoryManager _instance;
 
-    public GameObjectFactory GetFactory(string key)
-    {
-        if (factories.TryGetValue(key, out GameObjectFactory factory))
-        {
-            return factory;
-        }
-        throw new KeyNotFoundException($"No factory found for key '{key}'");
-    }
+        private Dictionary<string, GameObjectFactory> factories = new Dictionary<string, GameObjectFactory>();
 
-    public GameObject CreateObject(string key, Transform parent)
-    {
-        if (factories.TryGetValue(key, out GameObjectFactory factory))
+        public void RegisterFactory(string key, GameObject prefab)
         {
-            return factory.Create(parent);
+            if (!factories.ContainsKey(key))
+            {
+                factories[key] = new GameObjectFactory(prefab);
+            }
+            else
+            {
+                Debug.LogWarning($"Factory for type {key} already registered.");
+            }
         }
-        throw new KeyNotFoundException($"No factory found for key '{key}'");
-    }
 
-    public void UnregisterFactory(string key)
-    {
-        if (factories.TryGetValue(key, out GameObjectFactory factory))
+        public GameObjectFactory GetFactory(string key)
         {
-            factories.Remove(key);
+            if (factories.TryGetValue(key, out GameObjectFactory factory))
+            {
+                return factory;
+            }
+            throw new KeyNotFoundException($"No factory found for key '{key}'");
         }
-        throw new KeyNotFoundException($"No factory found for key '{key}'");
+
+        public GameObject CreateObject(string key, Transform parent)
+        {
+            if (factories.TryGetValue(key, out GameObjectFactory factory))
+            {
+                return factory.Create(parent);
+            }
+            throw new KeyNotFoundException($"No factory found for key '{key}'");
+        }
+
+        public void UnregisterFactory(string key)
+        {
+            if (factories.TryGetValue(key, out GameObjectFactory factory))
+            {
+                factories.Remove(key);
+            }
+            throw new KeyNotFoundException($"No factory found for key '{key}'");
+        }
     }
 }

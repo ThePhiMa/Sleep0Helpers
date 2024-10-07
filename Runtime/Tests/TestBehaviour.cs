@@ -1,4 +1,5 @@
 // Test behaviour for injection
+using Sleep0.Logic;
 using UnityEngine;
 
 public class TestBehaviour : MonoBehaviour

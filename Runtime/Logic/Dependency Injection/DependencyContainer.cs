@@ -3,108 +3,111 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 
-public class InjectAttribute : Attribute
+namespace Sleep0.Logic
 {
-    public LifetimeScope Scope { get; }
-
-    public InjectAttribute(LifetimeScope scope = LifetimeScope.Singleton)
+    public class InjectAttribute : Attribute
     {
-        Scope = scope;
-    }
-}
+        public LifetimeScope Scope { get; }
 
-public enum LifetimeScope
-{
-    Singleton,
-    Transient,
-    PerScene,
-    PerObject,
-    PerGameSession
-}
-
-public class DependencyContainer
-{
-    private static DependencyContainer _instance;
-    public static DependencyContainer Instance => _instance ??= new DependencyContainer();
-
-    private readonly Dictionary<Type, object> _singletons = new Dictionary<Type, object>();
-    private readonly Dictionary<Type, Func<object>> _factories = new Dictionary<Type, Func<object>>();
-    private readonly Dictionary<string, Dictionary<Type, object>> _sceneScoped = new Dictionary<string, Dictionary<Type, object>>();
-    private readonly Dictionary<Type, object> _gameSessionScoped = new Dictionary<Type, object>();
-
-    private DependencyContainer() { }
-
-    public void Register<T>(Func<T> factory)
-    {
-        _factories[typeof(T)] = () => factory();
-    }
-
-    public void InjectDependencies(object target)
-    {
-        var type = target.GetType();
-        Debug.Log($"Injecting depedencies... looking for type {type}");
-        var fields = type.GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
-
-        foreach (var field in fields)
+        public InjectAttribute(LifetimeScope scope = LifetimeScope.Singleton)
         {
-            var injectAttribute = field.GetCustomAttribute<InjectAttribute>();
-            if (injectAttribute != null)
+            Scope = scope;
+        }
+    }
+
+    public enum LifetimeScope
+    {
+        Singleton,
+        Transient,
+        PerScene,
+        PerObject,
+        PerGameSession
+    }
+
+    public class DependencyContainer
+    {
+        private static DependencyContainer _instance;
+        public static DependencyContainer Instance => _instance ??= new DependencyContainer();
+
+        private readonly Dictionary<Type, object> _singletons = new Dictionary<Type, object>();
+        private readonly Dictionary<Type, Func<object>> _factories = new Dictionary<Type, Func<object>>();
+        private readonly Dictionary<string, Dictionary<Type, object>> _sceneScoped = new Dictionary<string, Dictionary<Type, object>>();
+        private readonly Dictionary<Type, object> _gameSessionScoped = new Dictionary<Type, object>();
+
+        private DependencyContainer() { }
+
+        public void Register<T>(Func<T> factory)
+        {
+            _factories[typeof(T)] = () => factory();
+        }
+
+        public void InjectDependencies(object target)
+        {
+            var type = target.GetType();
+            Debug.Log($"Injecting depedencies... looking for type {type}");
+            var fields = type.GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
+
+            foreach (var field in fields)
             {
-                var fieldType = field.FieldType;
-                Debug.Log($"Injecting dependency for {fieldType}");
-                object dependency = ResolveDependency(fieldType, injectAttribute.Scope);
-                field.SetValue(target, dependency);
+                var injectAttribute = field.GetCustomAttribute<InjectAttribute>();
+                if (injectAttribute != null)
+                {
+                    var fieldType = field.FieldType;
+                    Debug.Log($"Injecting dependency for {fieldType}");
+                    object dependency = ResolveDependency(fieldType, injectAttribute.Scope);
+                    field.SetValue(target, dependency);
+                }
             }
         }
-    }
 
-    private object ResolveDependency(Type type, LifetimeScope scope)
-    {
-        switch (scope)
+        private object ResolveDependency(Type type, LifetimeScope scope)
         {
-            case LifetimeScope.Singleton:
-                if (!_singletons.TryGetValue(type, out var singleton))
-                {
-                    singleton = CreateInstance(type);
-                    _singletons[type] = singleton;
-                }
-                return singleton;
+            switch (scope)
+            {
+                case LifetimeScope.Singleton:
+                    if (!_singletons.TryGetValue(type, out var singleton))
+                    {
+                        singleton = CreateInstance(type);
+                        _singletons[type] = singleton;
+                    }
+                    return singleton;
 
-            case LifetimeScope.Transient:
-                return CreateInstance(type);
+                case LifetimeScope.Transient:
+                    return CreateInstance(type);
 
-            case LifetimeScope.PerScene:
-                var sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
-                if (!_sceneScoped.TryGetValue(sceneName, out var sceneInstances))
-                {
-                    sceneInstances = new Dictionary<Type, object>();
-                    _sceneScoped[sceneName] = sceneInstances;
-                }
-                if (!sceneInstances.TryGetValue(type, out var sceneInstance))
-                {
-                    sceneInstance = CreateInstance(type);
-                    sceneInstances[type] = sceneInstance;
-                }
-                return sceneInstance;
+                case LifetimeScope.PerScene:
+                    var sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+                    if (!_sceneScoped.TryGetValue(sceneName, out var sceneInstances))
+                    {
+                        sceneInstances = new Dictionary<Type, object>();
+                        _sceneScoped[sceneName] = sceneInstances;
+                    }
+                    if (!sceneInstances.TryGetValue(type, out var sceneInstance))
+                    {
+                        sceneInstance = CreateInstance(type);
+                        sceneInstances[type] = sceneInstance;
+                    }
+                    return sceneInstance;
 
-            default:
-                throw new ArgumentOutOfRangeException(nameof(scope), scope, null);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(scope), scope, null);
+            }
         }
-    }
 
-    private object CreateInstance(Type type)
-    {
-        if (_factories.TryGetValue(type, out var factory))
+        private object CreateInstance(Type type)
         {
-            return factory();
+            if (_factories.TryGetValue(type, out var factory))
+            {
+                return factory();
+            }
+            Debug.LogError($"No factory registered for type {type}");
+            throw new Exception($"No factory registered for type {type}");
         }
-        Debug.LogError($"No factory registered for type {type}");
-        throw new Exception($"No factory registered for type {type}");
-    }
 
-    // Method to clear per-scene dependencies when a scene is unloaded
-    public void ClearSceneDependencies(string sceneName)
-    {
-        _sceneScoped.Remove(sceneName);
+        // Method to clear per-scene dependencies when a scene is unloaded
+        public void ClearSceneDependencies(string sceneName)
+        {
+            _sceneScoped.Remove(sceneName);
+        }
     }
 }

@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using Sleep0.Logic;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
