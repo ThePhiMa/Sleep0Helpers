@@ -15,8 +15,8 @@ namespace Sleep0.Logic
         /// <seealso cref="UpdateManager.Register"/>
         public static void RegisterInManager(this IManagedObject updatable)
         {
-            Debug.Assert(MonobehaviourManager.Instance != null, "MonobehaviourManager.Instance is null");
-            MonobehaviourManager.Instance.Register(updatable);
+            Debug.Assert(MonoBehaviourManager.Instance != null, "MonobehaviourManager.Instance is null");
+            MonoBehaviourManager.Instance.Register(updatable);
         }
 
         /// <summary>
@@ -25,8 +25,8 @@ namespace Sleep0.Logic
         /// <seealso cref="UpdateManager.Unregister"/>
         public static void UnregisterInManager(this IManagedObject updatable)
         {
-            Debug.Assert(MonobehaviourManager.Instance != null, "MonobehaviourManager.Instance is null");
-            MonobehaviourManager.Instance.Unregister(updatable);
+            Debug.Assert(MonoBehaviourManager.Instance != null, "MonobehaviourManager.Instance is null");
+            MonoBehaviourManager.Instance.Unregister(updatable);
         }
     }
 }

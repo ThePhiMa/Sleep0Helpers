@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Sleep0.Logic
 {
     [DefaultExecutionOrder(-50)]
-    public class MonobehaviourManager : SingletonMonoBehaviour<MonobehaviourManager>
+    public sealed class MonoBehaviourManager : SingletonMonoBehaviour<MonoBehaviourManager>
     {
         // Update methods
         private readonly List<IManagedUpdatable> _updatableObjects = new List<IManagedUpdatable>();

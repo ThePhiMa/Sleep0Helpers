@@ -10,11 +10,12 @@ namespace Sleep0.Logic
 
         private Dictionary<string, GameObjectFactory> factories = new Dictionary<string, GameObjectFactory>();
 
-        public void RegisterFactory(string key, GameObject prefab)
+        public void RegisterFactory<T>(string key, GameObject prefab) where T : GameObjectFactory, new()
         {
             if (!factories.ContainsKey(key))
             {
-                factories[key] = new GameObjectFactory(prefab);
+                factories[key] = new T();
+                factories[key].Initialize(prefab);
             }
             else
             {

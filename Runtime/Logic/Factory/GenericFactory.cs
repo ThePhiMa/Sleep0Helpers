@@ -30,18 +30,26 @@ namespace Sleep0.Logic
     {
         private GameObject prefab;
 
-        public GameObjectFactory(GameObject prefab)
+        public GameObjectFactory() { }
+
+        public void Initialize(GameObject prefab)
         {
             this.prefab = prefab ?? throw new ArgumentNullException(nameof(prefab));
         }
 
         public GameObject Create(Transform parent = null)
         {
+            if (prefab == null)
+                throw new ArgumentNullException("GameObjectFactory does not have a prefab set.");
+
             return GameObject.Instantiate(prefab, parent);
         }
 
         public T Create<T>(Transform parent = null, params object[] parameters) where T : Component
         {
+            if (prefab == null)
+                throw new ArgumentNullException("GameObjectFactory does not have a prefab set.");
+
             GameObject instance = Create(parent);
             T component = instance.GetComponent<T>();
 
