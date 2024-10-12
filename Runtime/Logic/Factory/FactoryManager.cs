@@ -3,18 +3,18 @@ using UnityEngine;
 
 namespace Sleep0.Logic
 {
-    public class FactoryManager
+    public class FactoryManager<T> where T : FactoryManager<T>, new()
     {
-        public static FactoryManager Instance => _instance ??= new FactoryManager();
-        private static FactoryManager _instance;
+        public static T Instance => _instance ??= new T();
+        private static T _instance;
 
         private Dictionary<string, GameObjectFactory> factories = new Dictionary<string, GameObjectFactory>();
 
-        public void RegisterFactory<T>(string key, GameObject prefab) where T : GameObjectFactory, new()
+        public virtual void RegisterFactory<TFactory>(string key, GameObject prefab) where TFactory : GameObjectFactory, new()
         {
             if (!factories.ContainsKey(key))
             {
-                factories[key] = new T();
+                factories[key] = new TFactory();
                 factories[key].Initialize(prefab);
             }
             else
@@ -23,7 +23,7 @@ namespace Sleep0.Logic
             }
         }
 
-        public GameObjectFactory GetFactory(string key)
+        public virtual GameObjectFactory GetFactory(string key)
         {
             if (factories.TryGetValue(key, out GameObjectFactory factory))
             {
@@ -32,7 +32,7 @@ namespace Sleep0.Logic
             throw new KeyNotFoundException($"No factory found for key '{key}'");
         }
 
-        public GameObject CreateObject(string key, Transform parent)
+        public virtual GameObject CreateObject(string key, Transform parent)
         {
             if (factories.TryGetValue(key, out GameObjectFactory factory))
             {
@@ -41,13 +41,20 @@ namespace Sleep0.Logic
             throw new KeyNotFoundException($"No factory found for key '{key}'");
         }
 
-        public void UnregisterFactory(string key)
+        public virtual void UnregisterFactory(string key)
         {
             if (factories.TryGetValue(key, out GameObjectFactory factory))
             {
                 factories.Remove(key);
+                return;
             }
             throw new KeyNotFoundException($"No factory found for key '{key}'");
+        }
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void Reset()
+        {
+            _instance = null;
         }
     }
 }

@@ -109,5 +109,11 @@ namespace Sleep0.Logic
         {
             _sceneScoped.Remove(sceneName);
         }
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void Reset()
+        {
+            _instance = null;
+        }
     }
 }
