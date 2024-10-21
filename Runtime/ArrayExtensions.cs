@@ -7,7 +7,7 @@ namespace Sleep0
         /// <summary>
         /// Shifts the array to the left by the given amount.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="T">Generic typed array</typeparam>
         /// <param name="arr"></param>
         /// <param name="shift"></param>
         public static void LeftShift<T>(this T[] arr, int shift)
