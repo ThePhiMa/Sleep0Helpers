@@ -4,44 +4,149 @@
 
 ## Overview
 
-Sleep0Helpers is a Unity package containing a collection of helper scripts designed to streamline game development. These utilities cover common operations, extension methods, and design patterns.
+Sleep0.Helpers is a modular framework designed to accelerate Unity development by providing common patterns, utilities, and extensions that can be reused across projects. This package includes tools for dependency injection, event management, PID controllers, managed behaviors, and more.
 
 ## Features
 
-- **GenericFactory.cs**: A base class for creating GameObject instances with various parameters.
-  - *GameObjectFactory*: An abstract class that serves as a base for creating GameObject instances with specific components.
+### Editor Extensions
 
-- **MonobehaviourManager.cs**: Manages update cycles of objects implementing custom interfaces.
-  - *MonobehaviourManager*: A singleton that manages the update cycle of objects implementing `IManagedUpdatable`, `IManagedLateUpdatable`, and `IManagedFixedUpdatable` interfaces.
+- **Auto Compiler Toggler** - Enable/disable automatic compilation with a keyboard shortcut (Ctrl+Alt+A)
+- **Inspector Extensions** - Transform manipulation tools (reset position, rotation, scale)
+- **Toolbar Extensions** - Adds quick access buttons for common actions (Compile, Build, Project Settings)
+- **Work Timer** - Tracks your work time with auto-start/stop capabilities based on editor focus
 
-- **SingletonMonoBehaviour.cs**: Ensures a single instance of MonoBehaviour types within the scene.
-  - *SingletonMonoBehaviour<T>*: A generic abstract class ensuring only one instance of a MonoBehaviour of type `T` exists.
+### Dependency Injection
 
-- **GameObjectExtensions.cs**: Provides extension methods for GameObjects.
-  - *GameObjectExtensions*: Includes methods like `DestroySafe` for safely destroying GameObjects.
+A lightweight DI system with support for different lifetime scopes:
+- Singleton
+- Transient
+- Per Scene
 
-- **PIDController.cs**: Implements a Proportional-Integral-Derivative controller for GameObjects.
-  - *PIDController*: A controller used for smooth and responsive control systems.
+```csharp
+// Register services
+DependencyContainer.Instance.Register<ISingletonService>(() => new SingletonService());
 
-- **Array Extensions**: Adds utility methods for array manipulation, such as shuffling or finding the index of an element.
+// Inject dependencies with attributes
+[Inject(LifetimeScope.Singleton)] 
+public ISingletonService service;
+```
 
-- **Bit Extensions**: Provides methods for bitwise operations, enhancing the readability and performance of bit manipulation tasks.
+### Event System
 
-- **Math Extensions**: Includes additional mathematical functions and constants not available in Unity’s Mathf class, such as linear interpolation for various types.
+Decoupled messaging system to facilitate communication between components:
 
-- **Vector3 Extensions**: Adds convenience methods for Vector3 operations, like projecting vectors or calculating distances.
+```csharp
+// Define an event
+public class GameStartedEvent : IGameEvent { }
 
-- **DebugHelper.cs**: Provides additional functionality for debugging, including logging with method, file, and line information.
+// Subscribe to events
+EventBus.Subscribe<GameStartedEvent>(OnGameStarted);
+
+// Publish events
+EventBus.Publish(new GameStartedEvent());
+```
+
+### Managed Behaviours
+
+A framework for update management with execution order:
+
+```csharp
+public class MyUpdatableBehaviour : ManagedBehaviour, IManagedUpdatable
+{
+    public void ManagedUpdate()
+    {
+        // Guaranteed execution order
+    }
+}
+```
+
+### Math Extensions
+
+- **PID Controllers** - Proportional-Integral-Derivative controllers for smooth motion control
+- **Quaternion Extensions** - Advanced quaternion operations
+- **Vector3 Extensions** - Additional vector operations
+- **Bit Extensions** - Bit manipulation helpers
+
+### Factory System
+
+Factory pattern implementation for game object creation and pooling:
+
+```csharp
+// Register factory
+FactoryManager.Instance.RegisterFactory<EnemyFactory>("Enemy", enemyPrefab);
+
+// Create objects
+GameObject enemy = FactoryManager.Instance.CreateObject("Enemy", transform);
+```
+
+### Camera Controller
+
+First-person camera controller with input support:
+
+```csharp
+// Add to scene
+var controller = Instantiate(fpsControllerPrefab);
+```
 
 ## Installation
 
-1. Open Unity Package Manager (Window -> Package Manager).
-2. Click the "+" icon and select "Add package from git URL...".
-3. Enter the repository URL: `https://github.com/ThePhiMa/Sleep0Helpers.git`.
+### Using Unity Package Manager (UPM)
 
-## Usage
+1. Open the Package Manager window in Unity
+2. Click the "+" button and select "Add package from git URL..."
+3. Enter the repository URL: `https://github.com/yourusername/Sleep0.Helpers.git`
 
-Refer to the individual script files for detailed usage instructions and examples. Each script includes comments and example code snippets to help you integrate it into your project.
+### Manual Installation
+
+1. Download or clone this repository
+2. Copy the contents to your Unity project's Assets folder
+
+## Requirements
+
+- Unity 2020.3 or newer
+- .NET Standard 2.0
+
+## Usage Examples
+
+### Dependency Injection
+
+```csharp
+// In a startup script
+void Start()
+{
+    DependencyContainer.Instance.Register<IGameService>(() => new GameService());
+    DependencyContainer.Instance.Register<IPlayerService>(() => new PlayerService());
+}
+
+// In other scripts
+public class Player : MonoBehaviour
+{
+    [Inject(LifetimeScope.Singleton)]
+    private IGameService gameService;
+    
+    void Start()
+    {
+        DependencyContainer.Instance.InjectDependencies(this);
+    }
+}
+```
+
+### PID Controller
+
+```csharp
+// Create a PID Controller
+PIDController controller = new PIDController(pidValues);
+
+// Update in fixed update
+void FixedUpdate()
+{
+    float currentVelocity = rigidbody.velocity.magnitude;
+    float targetVelocity = 10f;
+    
+    float force = controller.Update(currentVelocity, targetVelocity, Time.fixedDeltaTime);
+    rigidbody.AddForce(transform.forward * force);
+}
+```
 
 ## License
 
