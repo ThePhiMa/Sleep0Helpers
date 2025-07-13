@@ -23,7 +23,7 @@ namespace Sleep0.Logic
         public Vector3 SideThrust => _sideThrust;
         public Vector3 UpThrust => _upThrust;
         public Vector3 Torque => _torque;
-        public Vector3 CurrentVelocity => _rigidbody != null ? _rigidbody.velocity : Vector3.zero;
+        public Vector3 CurrentVelocity => _rigidbody != null ? _rigidbody.linearVelocity : Vector3.zero;
         public Transform CurrentTarget => _currentTarget;
 
         public PIDControllerVector3 MainThrustController => _mainThrustController;

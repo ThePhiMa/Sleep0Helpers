@@ -103,7 +103,7 @@ var controller = Instantiate(fpsControllerPrefab);
 
 ## Requirements
 
-- Unity 2020.3 or newer
+- Unity 6 or newer
 - .NET Standard 2.0
 
 ## Usage Examples
