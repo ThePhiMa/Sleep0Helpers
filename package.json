@@ -1,7 +1,7 @@
 {
   "name": "com.sleep0.helpers",
   "displayName": "Sleep0 Helpers",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "description": "Collection of helper classes and functions. Repo: https://github.com/ThePhiMa/Sleep0Helpers.git",
   "unity": "6000.1",
   "documentationUrl": "https://github.com/ThePhiMa/Sleep0Helpers",
@@ -18,8 +18,8 @@
   ],
   "author": {
     "name": "Mischa 'The PhiMa' Wasmuth",
-    "email": "mischa+sleep0helpers@wasmuth.ws",
-    "url": "www.got0sleep.xyz"
+    "url": "www.got0sleep.xyz",
+    "email": "mischa+sleep0helpers@wasmuth.ws"
   },
   "type": "tool",
   "dependencies": {
